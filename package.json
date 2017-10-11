@@ -7,6 +7,12 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "babel-cli": "^6.26.0"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "flow-bin": "^0.56.0",
+    "mongodb": "^2.2.31"
+  },
+  "scripts": {
+    "start": "babel-node index.js"
   }
 }

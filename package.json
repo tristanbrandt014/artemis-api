@@ -7,12 +7,22 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "apollo-server-express": "^1.1.6",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-flow": "^6.23.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "express": "^4.16.2",
     "flow-bin": "^0.56.0",
-    "mongodb": "^2.2.31"
+    "graphql": "^0.11.7",
+    "graphql-tools": "^2.4.0",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.12.1"
   },
   "scripts": {
-    "start": "babel-node index.js"
+    "watch": "nodemon index.js --exec babel-node --presets env"
   }
 }

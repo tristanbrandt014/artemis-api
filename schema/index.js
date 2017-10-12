@@ -1,7 +1,13 @@
 // @flow
-import {makeExecutableSchema} from 'graphql-tools'
+import { makeExecutableSchema } from "graphql-tools"
+import * as schemas from "./imports"
+import {getRootType} from './../utils/getRootType'
+import {getTypes} from './../utils/getTypes'
 
-import * as Project from './Project'
+const queries = getRootType(schemas, "queries")
+const mutations = getRootType(schemas, "mutations")
+const types = getTypes(schemas)
+
 
 const baseSchema = `
     schema {
@@ -19,15 +25,27 @@ const baseSchema = `
 `
 
 const baseResolvers = {
-    Query: {
-        init: () => true
-    },
-    Mutation: {
-        init: () => true
-    }
+  Query: {
+    init: () => true,
+    ...queries.resolvers
+  },
+  Mutation: {
+    init: () => true,
+    ...mutations.resolvers
+  }
 }
 
+const typeDefs = [
+    baseSchema,
+    ...queries.schema,
+    ...mutations.schema,
+    ...types.schema
+]
+
 export default makeExecutableSchema({
-    typeDefs: baseSchema,
-    resolvers: baseResolvers
+  typeDefs,
+  resolvers: {
+      ...baseResolvers,
+      ...types.resolvers
+    }
 })

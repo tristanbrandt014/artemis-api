@@ -9,9 +9,9 @@ export const Project = gql`
         ABANDONED
     }
     type Project {
-        id: string,
-        name: string,
-        description: string,
+        id: String,
+        name: String,
+        description: String,
         status: Status
         archived: Boolean
     }

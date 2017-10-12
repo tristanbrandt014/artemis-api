@@ -3,7 +3,7 @@ import gql from './../../utils/gql'
 
 export const Mutation = gql`
     extend type Mutation {
-        createProject(name: String)
+        createProject(name: String): Project
     }
 `
 

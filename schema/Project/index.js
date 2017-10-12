@@ -1,6 +1,12 @@
-import {Mutations} from './mutations'
+import {Mutation} from './mutations'
 import * as types from './types'
 
-export const mutations = Mutations
+export const mutations = Mutation
 export const queries = {}
 export {types}
+
+export default {
+    mutations,
+    queries,
+    types
+}

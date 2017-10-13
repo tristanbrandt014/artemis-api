@@ -9,4 +9,5 @@ export const getDb = function() {
 }
 export const connect = function() {
   db = MongoClient.connect(config.database.url)
+  return db
 }

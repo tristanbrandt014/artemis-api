@@ -7,6 +7,7 @@ export const Project = gql`
         SCHEDULED
         COMPLETE
         ABANDONED
+        NONE
     }
     type Project {
         id: String,
@@ -18,6 +19,9 @@ export const Project = gql`
 `
 
 Project.id = (root, params, context) => {
-    console.log(root)
-    return root.id
+    return root._id
+}
+
+Project.description = (root, params, context) => {
+    return root.description || ""
 }

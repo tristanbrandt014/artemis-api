@@ -9,11 +9,14 @@
   "dependencies": {
     "apollo-server-express": "^1.1.6",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
+    "eslint": "^4.8.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "express": "^4.16.2",
     "flow-bin": "^0.56.0",
@@ -25,6 +28,12 @@
     "nodemon": "^1.12.1"
   },
   "scripts": {
-    "watch": "nodemon index.js --exec babel-node --presets env"
+    "watch": "nodemon index.js --exec babel-node --presets env",
+    "seed:up":
+      "babel-node ./seeders/seeder.js up --presets env",
+    "seed:down":
+      "babel-node ./seeders/seeder.js down --presets env",
+    "seed:reset":
+      "babel-node ./seeders/seeder.js reset --presets env"
   }
 }

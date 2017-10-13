@@ -2,7 +2,7 @@
 import _ from "lodash"
 import type { Schema } from "./../types/schema"
 
-type Type = {
+type GraphQLType = {
   schema: Array<string>,
   resolvers: {
     [typeName: string]: {
@@ -11,7 +11,7 @@ type Type = {
   }
 }
 
-export const getTypes = (schemaMap: Schema): Type =>
+export const getTypes = (schemaMap: Schema): GraphQLType =>
   _.keys(schemaMap).reduce(
     (types, key) => {
       const obj = schemaMap[key]

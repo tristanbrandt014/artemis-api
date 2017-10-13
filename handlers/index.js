@@ -1,1 +1,4 @@
-export * from './Project'
+// @flow
+
+import Project from './Project'
+export {Project}

@@ -8,5 +8,5 @@ export const Mutation = gql`
 `
 
 Mutation.createProject = (root, params, context) => {
-
+    return context.handlers.Project.create(params)
 }

@@ -21,7 +21,7 @@ export const getTypes = (schemaMap: Schema): GraphQLType =>
           ..._.keys(obj.types).map(_type => obj.types[_type]._schema)
         ]
         types.resolvers = {
-          ...types.resolvers.map,
+          ...types.resolvers,
           ..._.keys(obj.types).reduce((_types, _type) => {
             _types[_type] = _.omit(obj.types[_type], "_schema")
             return _types

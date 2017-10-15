@@ -7,6 +7,7 @@ export const Query = gql`
     }
 `
 
-Query.Projects = (root, params, context) => {
-    return context.handlers.Project.fetch(params)
+Query.Projects = async (root, params, context) => {
+    const res = await context.handlers.Project.fetch(context.id)(params)
+    return res
 }

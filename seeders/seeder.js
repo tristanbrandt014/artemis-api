@@ -25,6 +25,11 @@ const up = async db => {
             archived: {
               $type: "bool"
             }
+          },
+          {
+            user_id: {
+              $type: "objectId"
+            }
           }
         ]
       }

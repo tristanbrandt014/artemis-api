@@ -7,7 +7,6 @@ import { getTypes } from "./../utils/getTypes"
 const queries = getRootType(schemas, "queries")
 const mutations = getRootType(schemas, "mutations")
 const types = getTypes(schemas)
-
 const baseSchema = `
     schema {
         query: Query

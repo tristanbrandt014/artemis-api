@@ -19,13 +19,13 @@ export const Mutation = gql`
 `
 
 Mutation.createProject = (root, params, context) => {
-  return context.handlers.Project.create(params)
+  return context.handlers.Project.create(context.id)(params)
 }
 
 Mutation.updateProject = (root, params, context) => {
-  return context.handlers.Project.update(params)
+  return context.handlers.Project.update(context.id)(params)
 }
 
 Mutation.destroyProject = (root, params, context) => {
-  return context.handlers.Project.destroy(params)
+  return context.handlers.Project.destroy(context.id)(params)
 }

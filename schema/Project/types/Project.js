@@ -1,27 +1,28 @@
 // @flow
-import gql from './../../../utils/gql'
+import gql from "./../../../utils/gql"
 
 export const Project = gql`
-    enum Status {  
-        ACTIVE
-        SCHEDULED
-        COMPLETE
-        ABANDONED
-        NONE
-    }
-    type Project {
-        id: String,
-        name: String,
-        description: String,
-        status: Status
-        archived: Boolean
-    }
+  enum Status {
+    ACTIVE
+    SCHEDULED
+    COMPLETE
+    ABANDONED
+    NONE
+  }
+
+  type Project {
+    id: String
+    name: String
+    description: String
+    status: Status
+    archived: Boolean
+  }
 `
 
-Project.id = (root, params, context) => {
-    return root._id
+Project.id = root => {
+  return root._id
 }
 
-Project.description = (root, params, context) => {
-    return root.description || ""
+Project.description = root => {
+  return root.description || ""
 }

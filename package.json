@@ -13,6 +13,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
@@ -22,6 +23,7 @@
     "flow-bin": "^0.56.0",
     "graphql": "^0.11.7",
     "graphql-tools": "^2.4.0",
+    "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.31",
     "morgan": "^1.9.0",
@@ -29,11 +31,8 @@
   },
   "scripts": {
     "watch": "nodemon index.js --exec babel-node --presets env",
-    "seed:up":
-      "babel-node ./seeders/seeder.js up --presets env",
-    "seed:down":
-      "babel-node ./seeders/seeder.js down --presets env",
-    "seed:reset":
-      "babel-node ./seeders/seeder.js reset --presets env"
+    "seed:up": "babel-node ./seeders/seeder.js up --presets env",
+    "seed:down": "babel-node ./seeders/seeder.js down --presets env",
+    "seed:reset": "babel-node ./seeders/seeder.js reset --presets env"
   }
 }

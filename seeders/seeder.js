@@ -29,6 +29,33 @@ const up = async db => {
         ]
       }
     })
+
+    await db.createCollection("user", {
+      validator: {
+        $or: [
+          {
+            firstname: {
+              $type: "string"
+            }
+          },
+          {
+            lastname: {
+              $type: "string"
+            }
+          },
+          {
+            email: {
+              $type: "string"
+            }
+          },
+          {
+            password: {
+              $type: "string"
+            }
+          }
+        ]
+      }
+    })
   } catch (err) {
     console.log(err)
   }

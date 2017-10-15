@@ -1,32 +1,36 @@
 // @flow
-import test from "./schema"
 import { connect } from "./utils/connection"
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express"
-import morgan from 'morgan'
-import bodyParser from 'body-parser'
-import cors from 'cors'
+import morgan from "morgan"
+import bodyParser from "body-parser"
+import cors from "cors"
 import config from "./config"
 import express from "express"
 import schema from "./schema"
 import createContext from "./utils/createContext"
-import env from 'dotenv'
+import env from "dotenv"
+import { Auth } from "./routes"
+import {AuthMiddleware} from './middleware'
 
 const server = express()
 env.config()
 
-server.set('auth_secret', config.secret)
-server.use(bodyParser.urlencoded({extended: false}))
+server.set("auth_secret", config.secret)
+server.use(bodyParser.urlencoded({ extended: false }))
 server.use(bodyParser.json())
-server.use(morgan('dev'))
+server.use(morgan("dev"))
 server.use(cors())
 
 connect()
   .then(() => {
+    server.use(Auth)
+    server.use(AuthMiddleware)
+
     server.use(
       "/graphql",
-      graphqlExpress(() => ({
+      graphqlExpress(req => ({
         schema,
-        context: createContext()
+        context: req.context
       }))
     )
 

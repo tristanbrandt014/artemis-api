@@ -1,5 +1,8 @@
-import * as handlers from './../handlers'
+import * as handlers from "./../handlers"
 
-export default () => ({
-    handlers
-})
+export default (token) => {
+  return {
+    handlers,
+    id: token.id
+  }
+}

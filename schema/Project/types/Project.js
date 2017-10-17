@@ -19,7 +19,7 @@ export const Project = gql`
   }
 `
 
-Project.id = (root, params, context) => {
+Project.id = (root) => {
   return root._id
 }
 

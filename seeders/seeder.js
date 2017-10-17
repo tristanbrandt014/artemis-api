@@ -61,6 +61,28 @@ const up = async db => {
         ]
       }
     })
+
+    await db.createCollection("category", {
+      validator: {
+        $or: [
+          {
+            user_id: {
+              $type: "objectId"
+            }
+          },
+          {
+            name: {
+              $type: "string"
+            }
+          },
+          {
+            color: {
+              $type: "string"
+            }
+          }
+        ]
+      }
+    })
   } catch (err) {
     console.log(err)
   }

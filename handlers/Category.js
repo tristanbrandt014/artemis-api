@@ -21,7 +21,8 @@ const create = (user_id: string): CreateType => async args => {
 
 type FetchType = ({
   id?: string,
-  name?: string
+  name?: string,
+  project?: string
 }) => Promise<Array<CategoryType>>
 
 const fetch = (user_id: string): FetchType => async args => {
@@ -31,8 +32,11 @@ const fetch = (user_id: string): FetchType => async args => {
   const where = {
     user_id: ObjectId(user_id),
     ...(args.id ? { _id: ObjectId(args.id) } : {}),
-    ...(args.name ? { name: args.name } : {})
+    ...(args.name ? { name: args.name } : {}),
+    ...(args.project ? { project_ids: ObjectId(args.project) } : {})
   }
+
+  console.log(where)
 
   const query = await Category.find(where)
   const result = await query.toArray()
@@ -61,17 +65,66 @@ const update = (user_id: string): UpdateType => async args => {
 type DestroyType = ({ id: string }) => Promise<CategoryType>
 
 const destroy = (user_id: string): DestroyType => async args => {
-    const db = await getDb()
-    const Category = db.collection("category")
+  const db = await getDb()
+  const Category = db.collection("category")
 
-    const result = await fetch(user_id)({ id: args.id })
-    await Category.remove({ _id: ObjectId(args.id) })
-    return result[0]
+  const result = await fetch(user_id)({ id: args.id })
+  await Category.remove({ _id: ObjectId(args.id) })
+  return result[0]
+}
+
+type AddProjectType = ({ project_id: string, category_id: string }) => Promise<
+  Object
+>
+
+export const addProject = (user_id: string): AddProjectType => async args => {
+  const db = await getDb()
+  const Category = db.collection("category")
+
+  const result = await Category.update(
+    {
+      user_id: ObjectId(user_id),
+      _id: ObjectId(args.category_id)
+    },
+    {
+      $push: {
+        project_ids: ObjectId(args.project_id)
+      }
+    }
+  )
+  return result[0]
+}
+
+type RemoveProjectsType = (
+  user_id: string,
+  project_id: string
+) => Promise<Object>
+
+export const removeProjects: RemoveProjectsType = async (
+  user_id,
+  project_id
+) => {
+  const db = await getDb()
+  const Category = db.collection("category")
+
+  const result = await Category.update(
+    {
+      user_id: ObjectId(user_id)
+    },
+    {
+      $pull: {
+        project_ids: ObjectId(project_id)
+      }
+    }
+  )
+  return result[0]
 }
 
 export default {
   create,
   fetch,
   update,
-  destroy
+  destroy,
+  addProject,
+  removeProjects
 }

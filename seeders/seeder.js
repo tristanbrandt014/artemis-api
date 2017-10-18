@@ -79,6 +79,11 @@ const up = async db => {
             color: {
               $type: "string"
             }
+          },
+          {
+            project_ids: {
+              $type: "array"
+            }
           }
         ]
       }

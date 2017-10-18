@@ -3,7 +3,7 @@ import gql from './../../utils/gql'
 
 export const Query = gql`
     extend type Query {
-        Categories(id: String, name: String): [Category]
+        Categories(id: String, name: String, project: String): [Category]
     }
 `
 

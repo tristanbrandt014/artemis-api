@@ -11,7 +11,7 @@ export const Mutation = gql`
   extend type Mutation {
     # Create a note
     createNote(
-      name: String
+      name: String!
       body: String
       todos: [TodoInput]
       project_id: String

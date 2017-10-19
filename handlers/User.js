@@ -13,6 +13,29 @@ const fetch: FetchType = async id => {
   return result[0]
 }
 
+type UpdateSettingsType = ({
+  settings: {
+    startup: {
+      type: string,
+      value?: string
+    }
+  }
+}) => Promise<UserType>
+
+const updateSettings = (user_id: string): UpdateSettingsType => async args => {
+  const db = await getDb()
+  const User = db.collection("user")
+
+  const fields = {
+    ...(args.settings.startup ? { startup: args.settings.startup } : {})
+  }
+  await User.update({ _id: ObjectId(user_id) }, { $set: { ...fields } })
+  const result = await fetch(user_id)
+  
+  return result
+}
+
 export default {
-  fetch
+  fetch,
+  updateSettings
 }

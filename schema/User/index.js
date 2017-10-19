@@ -1,12 +1,13 @@
-import {Query} from './queries'
-import * as types from './types'
+import { Query } from "./queries"
+import { Mutation } from "./mutations"
+import * as types from "./types"
 
-export const mutations = {}
+export const mutations = Mutation
 export const queries = Query
-export {types}
+export { types }
 
 export default {
-    mutations,
-    queries,
-    types
+  mutations,
+  queries,
+  types
 }

@@ -34,12 +34,6 @@ connect()
       }))
     )
 
-    server.use(
-      "/graphiql",
-      graphiqlExpress({
-        endpointURL: "/graphql"
-      })
-    )
     server.listen(config.port, () =>
       console.log(`Listening at port ${config.port}`)
     )

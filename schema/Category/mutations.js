@@ -4,7 +4,7 @@ import gql from "./../../utils/gql"
 export const Mutation = gql`
     extend type Mutation {
         # Create a category
-        createCategory(name: String, color: String): Category
+        createCategory(name: String!, color: String): Category
         # Update a category
         updateCategory(
             id: String!

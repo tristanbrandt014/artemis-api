@@ -4,8 +4,8 @@ import gql from "./../../utils/gql"
 export const Mutation = gql`
   extend type Mutation {
     # Create a Project
-    createProject(name: String, category: String): Project
-    # Update a Project. id is required
+    createProject(name: String!, category: String): Project
+    # Update a Project.
     updateProject(
       id: String!
       name: String

@@ -11,7 +11,7 @@ export const Mutation = gql`
     }
     extend type Mutation {
         # Update user settings
-        updateUserSettings(settings: SettingsInput): User
+        updateUserSettings(settings: SettingsInput!): User
     }
 `
 

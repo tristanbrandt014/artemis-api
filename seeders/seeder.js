@@ -30,6 +30,11 @@ const up = async db => {
             user_id: {
               $type: "objectId"
             }
+          },
+          {
+            note_ids: {
+              $type: "array"
+            }
           }
         ]
       }
@@ -82,6 +87,33 @@ const up = async db => {
           },
           {
             project_ids: {
+              $type: "array"
+            }
+          }
+        ]
+      }
+    })
+
+    await db.createCollection("note", {
+      validator: {
+        $or: [
+          {
+            user_id: {
+              $type: "objectId"
+            }
+          },
+          {
+            name: {
+              $type: "string"
+            }
+          },
+          {
+            body: {
+              $type: "string"
+            }
+          },
+          {
+            todos: {
               $type: "array"
             }
           }

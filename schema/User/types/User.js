@@ -7,6 +7,7 @@ export const User = gql`
     firstname: String
     lastname: String
     email: String
+    startup: Startup 
   }
 `
 

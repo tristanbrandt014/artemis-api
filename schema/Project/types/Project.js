@@ -1,6 +1,6 @@
 // @flow
 import gql from "./../../../utils/gql"
-import _ from 'lodash'
+import _ from "lodash"
 
 export const Project = gql`
   enum Status {
@@ -18,6 +18,7 @@ export const Project = gql`
     status: Status
     archived: Boolean
     category: Category
+    notes: [Note]
   }
 `
 
@@ -34,4 +35,12 @@ Project.category = async (root, params, context) => {
     project: root._id.toString()
   })
   return _.get(categories, "[0]")
+}
+
+Project.notes = async (root, params, context) => {
+  return root.note_ids
+    ? context.handlers.Note.fetch(context.id)({
+        ids: root.note_ids.map(id => id.toString())
+      })
+    : []
 }

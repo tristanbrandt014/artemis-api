@@ -23,8 +23,6 @@ const create = (user_id: string): CreateType => async args => {
 
   const project = result.ops[0]
 
-  console.log(project)
-
   if (args.category) {
     await addToCategory(user_id)({
       project_id: project._id.toString(),
@@ -124,9 +122,59 @@ const removeFromCategories: RemoveFromCategoriesType = async (
   return result
 }
 
+type AddNoteType = ({ note_id: string, project_id: string }) => Promise<
+Object
+>
+
+export const addNote = (user_id: string): AddNoteType => async args => {
+  const db = await getDb()
+  const Project = db.collection("project")
+
+const result = await Project.update(
+  {
+    user_id: ObjectId(user_id),
+    _id: ObjectId(args.project_id)
+  },
+  {
+    $push: {
+      note_ids: ObjectId(args.note_id)
+    }
+  }
+)
+return result[0]
+}
+
+type RemoveNotetype = (
+  user_id: string,
+  note_id: string
+) => Promise<Object>
+
+export const removeNote: RemoveNotetype = async (
+  user_id,
+  note_id
+) => {
+  const db = await getDb()
+  const Project = db.collection("project")
+
+  const result = await Project.update(
+    {
+      user_id: ObjectId(user_id)
+    },
+    {
+      $pull: {
+        note_ids: ObjectId(note_id)
+      }
+    }
+  )
+  return result[0]
+}
+
+
 export default {
   create,
   fetch,
   update,
-  destroy
+  destroy,
+  addNote,
+  removeNote
 }

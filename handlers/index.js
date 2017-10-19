@@ -8,3 +8,6 @@ export { User }
 
 import Category from "./Category"
 export { Category }
+
+import Note from "./Note"
+export {Note}

@@ -14,3 +14,5 @@ The API is built with NodeJS, MongoDB and Graphql. To get it running, you'll nee
 To create a user, send a post request to `/register`, with fields `firstname`, `lastname`, `email` and `password`. I recommend [Postman](https://www.getpostman.com/). This will give you a token, which you will use with your GraphQL requests.
 
 To login, send a post request to `/login` with fields `email` and `password`. This will also return a token.
+
+I haven't added a graphiql endpoint to this because of the auth layer. If you wish to use GraphiQL (which I'd recommend), I've created a simple GraphQL fetcher [here](https://github.com/tristanbrandt014/graphiql), which allows you to add a token to your requests.

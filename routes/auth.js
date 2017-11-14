@@ -5,6 +5,7 @@ import { getDb } from "./../utils/connection"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import config from "./../config"
+import { omit } from "lodash"
 
 export const SALT_WORK_FACTOR = 10
 export const Auth = Router()
@@ -46,12 +47,16 @@ Auth.post("/register", async (req: $Request, res: $Response) => {
   })
 
   const user = insert.ops[0]
-  const token = jwt.sign({id: user._id}, config.secret, {
+  const token = jwt.sign({ id: user._id }, config.secret, {
     expiresIn: "1d" // expires in 24 hours
   })
 
   res.send({
-    token
+    token,
+    user: {
+      ...omit(user, ["_id", "password"]),
+      id: user._id
+    }
   })
 })
 
@@ -81,11 +86,15 @@ Auth.post("/login", async (req: $Request, res: $Request) => {
     return
   }
 
-  const token = jwt.sign({id: user._id}, config.secret, {
+  const token = jwt.sign({ id: user._id }, config.secret, {
     expiresIn: "1d" // expires in 24 hours
   })
 
   res.send({
-    token
+    token,
+    user: {
+      ...omit(user, ["_id", "password"]),
+      id: user._id
+    }
   })
 })

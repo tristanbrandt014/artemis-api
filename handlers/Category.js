@@ -5,7 +5,8 @@ import { ObjectId } from "mongodb"
 
 type CreateType = ({
   name: string,
-  color: string
+  color: string,
+  project_ids: Array<string>
 }) => Promise<CategoryType>
 
 const create = (user_id: string): CreateType => async args => {
@@ -35,8 +36,6 @@ const fetch = (user_id: string): FetchType => async args => {
     ...(args.name ? { name: args.name } : {}),
     ...(args.project ? { project_ids: ObjectId(args.project) } : {})
   }
-
-  console.log(where)
 
   const query = await Category.find(where)
   const result = await query.toArray()

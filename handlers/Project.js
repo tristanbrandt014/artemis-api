@@ -34,16 +34,24 @@ const create = (user_id: string): CreateType => async args => {
 }
 
 type FetchType = ({
-  ids?: Array<string>
+  ids?: Array<string>,
+  category?: string // Category ID
 }) => Promise<Array<ProjectType>>
 
 const fetch = (user_id: string): FetchType => async args => {
   const db = await getDb()
   const Project = db.collection("project")
 
+  let constraints
+  if (args.category) {
+    const category_projects = await Category.fetch(user_id)({ id: args.category })
+    constraints = category_projects[0].project_ids
+  }
+
   const where = {
     user_id: ObjectId(user_id),
-    ...(args.ids ? { _id: { $in: args.ids.map(ObjectId) } } : {})
+    ...(args.ids ? { _id: { $in: args.ids.map(ObjectId) } } : {}),
+    ...(constraints ? {_id: {$in: constraints}} : {})
   }
 
   const query = await Project.find(where)
@@ -122,37 +130,29 @@ const removeFromCategories: RemoveFromCategoriesType = async (
   return result
 }
 
-type AddNoteType = ({ note_id: string, project_id: string }) => Promise<
-Object
->
+type AddNoteType = ({ note_id: string, project_id: string }) => Promise<Object>
 
 export const addNote = (user_id: string): AddNoteType => async args => {
   const db = await getDb()
   const Project = db.collection("project")
 
-const result = await Project.update(
-  {
-    user_id: ObjectId(user_id),
-    _id: ObjectId(args.project_id)
-  },
-  {
-    $push: {
-      note_ids: ObjectId(args.note_id)
+  const result = await Project.update(
+    {
+      user_id: ObjectId(user_id),
+      _id: ObjectId(args.project_id)
+    },
+    {
+      $push: {
+        note_ids: ObjectId(args.note_id)
+      }
     }
-  }
-)
-return result[0]
+  )
+  return result[0]
 }
 
-type RemoveNotetype = (
-  user_id: string,
-  note_id: string
-) => Promise<Object>
+type RemoveNotetype = (user_id: string, note_id: string) => Promise<Object>
 
-export const removeNote: RemoveNotetype = async (
-  user_id,
-  note_id
-) => {
+export const removeNote: RemoveNotetype = async (user_id, note_id) => {
   const db = await getDb()
   const Project = db.collection("project")
 
@@ -168,7 +168,6 @@ export const removeNote: RemoveNotetype = async (
   )
   return result[0]
 }
-
 
 export default {
   create,

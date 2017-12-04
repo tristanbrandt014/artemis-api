@@ -30,6 +30,7 @@
     "nodemon": "^1.12.1"
   },
   "scripts": {
+    "build": "babel index.js --out-file build.js",
     "watch": "nodemon index.js --exec babel-node --presets env",
     "seed:up": "babel-node ./seeders/seeder.js up --presets env",
     "seed:down": "babel-node ./seeders/seeder.js down --presets env",

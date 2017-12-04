@@ -1,13 +1,12 @@
 // @flow
 import { connect } from "./utils/connection"
-import { graphqlExpress, graphiqlExpress } from "apollo-server-express"
+import { graphqlExpress } from "apollo-server-express"
 import morgan from "morgan"
 import bodyParser from "body-parser"
 import cors from "cors"
 import config from "./config"
 import express from "express"
 import schema from "./schema"
-import createContext from "./utils/createContext"
 import env from "dotenv"
 import { Auth } from "./routes"
 import {AuthMiddleware} from './middleware'

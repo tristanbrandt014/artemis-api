@@ -77,11 +77,14 @@ const destroy = (user_id: string): DestroyType => async args => {
   const db = await getDb()
   const Note = db.collection("note")
 
-  await removeFromProject(user_id, args.id)
+  const project = await removeFromProject(user_id, args.id)
 
   const result = await fetch(user_id)({ ids: [args.id] })
   await Note.remove({ _id: ObjectId(args.id) })
-  return result[0]
+  return {
+    ...result[0],
+    project
+  }
 }
 
 type AddToProjectType = ({
@@ -103,8 +106,8 @@ type RemoveFromProjectType = (
 ) => Promise<Object>
 
 const removeFromProject: RemoveFromProjectType = async (user_id, note_id) => {
-  const result = await Project.removeNote(user_id, note_id)
-  return result
+  const project = await Project.removeNote(user_id, note_id)
+  return project
 }
 
 export default {

@@ -18,7 +18,7 @@ const up = async db => {
           {
             status: {
               $type: "string",
-              $in: ["ACTIVE", "SCHEDULED", "COMPLETE", "ABANDONED", "NONE"]
+              $in: ["ACTIVE", "TODO", "COMPLETE", "ABANDONED", "NONE"]
             }
           },
           {
@@ -26,6 +26,11 @@ const up = async db => {
               $type: "bool"
             }
           },
+          {
+            summary: {
+              $type: "string"
+            }
+          }, 
           {
             user_id: {
               $type: "objectId"

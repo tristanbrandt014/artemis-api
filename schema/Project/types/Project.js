@@ -5,7 +5,7 @@ import _ from "lodash"
 export const Project = gql`
   enum Status {
     ACTIVE
-    SCHEDULED
+    TODO
     COMPLETE
     ABANDONED
     NONE
@@ -15,6 +15,7 @@ export const Project = gql`
     id: String
     name: String
     description: String
+    summary: String
     status: Status
     archived: Boolean
     category: Category
@@ -28,6 +29,10 @@ Project.id = root => {
 
 Project.description = root => {
   return root.description || ""
+}
+
+Project.summary = root => {
+  return root.summary || ""
 }
 
 Project.category = async (root, params, context) => {

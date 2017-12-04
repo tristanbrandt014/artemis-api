@@ -35,7 +35,9 @@ const create = (user_id: string): CreateType => async args => {
 
 type FetchType = ({
   ids?: Array<string>,
-  category?: string // Category ID
+  category?: string, // Category ID
+  archived?: boolean,
+  note_id?: string
 }) => Promise<Array<ProjectType>>
 
 const fetch = (user_id: string): FetchType => async args => {
@@ -44,15 +46,22 @@ const fetch = (user_id: string): FetchType => async args => {
 
   let constraints
   if (args.category) {
-    const category_projects = await Category.fetch(user_id)({ id: args.category })
+    const category_projects = await Category.fetch(user_id)({
+      id: args.category
+    })
     constraints = category_projects[0].project_ids
   }
 
   const where = {
     user_id: ObjectId(user_id),
     ...(args.ids ? { _id: { $in: args.ids.map(ObjectId) } } : {}),
-    ...(constraints ? {_id: {$in: constraints}} : {})
+    ...(typeof args.archived === "boolean" ? { archived: args.archived } : {}),
+    ...(args.note_id ? { note_ids: ObjectId(args.note_id) } : {}),
+    ...(constraints ? { _id: { $in: constraints } } : {})
   }
+
+  console.dir(where)
+  console.log(where)
 
   const query = await Project.find(where)
   const result = await query.toArray()
@@ -65,12 +74,15 @@ type UpdateType = ({
   description?: string,
   status?: string,
   archived?: boolean,
-  category?: string
+  category?: string,
+  summary?: string
 }) => Promise<ProjectType>
 
 const update = (user_id: string): UpdateType => async args => {
   const db = await getDb()
   const Project = db.collection("project")
+
+  console.log("CATEGORY", typeof args.category, args.category)
 
   const { id, ...rest } = args
   await Project.update(
@@ -150,15 +162,16 @@ export const addNote = (user_id: string): AddNoteType => async args => {
   return result[0]
 }
 
-type RemoveNotetype = (user_id: string, note_id: string) => Promise<Object>
+type RemoveNoteType = (user_id: string, note_id: string) => Promise<Object>
 
-export const removeNote: RemoveNotetype = async (user_id, note_id) => {
+export const removeNote: RemoveNoteType = async (user_id, note_id) => {
   const db = await getDb()
   const Project = db.collection("project")
 
-  const result = await Project.update(
+  const result = await Project.findOneAndUpdate(
     {
-      user_id: ObjectId(user_id)
+      user_id: ObjectId(user_id),
+      note_ids: ObjectId(note_id)
     },
     {
       $pull: {
@@ -166,7 +179,7 @@ export const removeNote: RemoveNotetype = async (user_id, note_id) => {
       }
     }
   )
-  return result[0]
+  return result.value
 }
 
 export default {

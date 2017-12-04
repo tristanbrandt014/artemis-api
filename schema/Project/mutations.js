@@ -13,6 +13,7 @@ export const Mutation = gql`
       status: String
       archived: Boolean
       category: String
+      summary: String
     ): Project
     # Destroy a Project
     destroyProject(id: String!): Project

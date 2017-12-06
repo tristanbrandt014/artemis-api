@@ -18,13 +18,11 @@ Note.id = root => {
 
 Note.project = async (root, params, context) => {
   if (root.project) {
-    console.log('ROOT', root.project)
     return root.project
   }
   const project = await context.handlers.Project.fetch(context.id)({
     note_id: root._id
   })
-
-  console.log('OTHER', project)
+  
   return get(project, "[0]", [])
 }

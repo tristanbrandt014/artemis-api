@@ -60,9 +60,6 @@ const fetch = (user_id: string): FetchType => async args => {
     ...(constraints ? { _id: { $in: constraints } } : {})
   }
 
-  console.dir(where)
-  console.log(where)
-
   const query = await Project.find(where)
   const result = await query.toArray()
   return result
@@ -82,8 +79,6 @@ const update = (user_id: string): UpdateType => async args => {
   const db = await getDb()
   const Project = db.collection("project")
 
-  console.log("CATEGORY", typeof args.category, args.category)
-
   const { id, ...rest } = args
   await Project.update(
     { _id: ObjectId(id), user_id: ObjectId(user_id) },
@@ -97,6 +92,8 @@ const update = (user_id: string): UpdateType => async args => {
       project_id: id,
       category_id: args.category || ""
     })
+  } else {
+    await removeFromCategories(user_id, id)
   }
   return result[0]
 }

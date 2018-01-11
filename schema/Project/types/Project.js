@@ -39,7 +39,7 @@ Project.category = async (root, params, context) => {
   const categories = await context.handlers.Category.fetch(context.id)({
     project: root._id.toString()
   })
-  return _.get(categories, "[0]")
+  return _.get(categories, "[0]", {})
 }
 
 Project.notes = async (root, params, context) => {

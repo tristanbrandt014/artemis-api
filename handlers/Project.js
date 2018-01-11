@@ -2,7 +2,8 @@
 import { getDb } from "./../utils/connection"
 import type { ProjectType } from "./../types/project"
 import { ObjectId } from "mongodb"
-import { Category } from "./"
+import { Category, User } from "./"
+import _ from "lodash"
 
 type CreateType = ({
   name: string,
@@ -30,6 +31,7 @@ const create = (user_id: string): CreateType => async args => {
     })
   }
 
+  User.updateVersion(user_id)
   return project
 }
 
@@ -82,7 +84,7 @@ const update = (user_id: string): UpdateType => async args => {
   const { id, ...rest } = args
   await Project.update(
     { _id: ObjectId(id), user_id: ObjectId(user_id) },
-    { $set: { ...rest } }
+    { $set: { ..._.omit(rest, "category") } }
   )
   const result = await fetch(user_id)({ ids: [id] })
 
@@ -92,9 +94,10 @@ const update = (user_id: string): UpdateType => async args => {
       project_id: id,
       category_id: args.category || ""
     })
-  } else {
+  } else if (args.category === ""){
     await removeFromCategories(user_id, id)
   }
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -110,6 +113,7 @@ const destroy = (user_id: string): DestroyType => async args => {
 
   const result = await fetch(user_id)({ ids: [args.id] })
   await Project.remove({ _id: ObjectId(args.id) })
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -123,6 +127,7 @@ const addToCategory = (user_id: string): AddToCategoryType => async args => {
     project_id: args.project_id,
     category_id: args.category_id
   })
+  User.updateVersion(user_id)  
   return result
 }
 
@@ -136,6 +141,7 @@ const removeFromCategories: RemoveFromCategoriesType = async (
   project_id
 ) => {
   const result = await Category.removeProjects(user_id, project_id)
+  User.updateVersion(user_id)  
   return result
 }
 
@@ -156,6 +162,7 @@ export const addNote = (user_id: string): AddNoteType => async args => {
       }
     }
   )
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -176,6 +183,7 @@ export const removeNote: RemoveNoteType = async (user_id, note_id) => {
       }
     }
   )
+  User.updateVersion(user_id)  
   return result.value
 }
 

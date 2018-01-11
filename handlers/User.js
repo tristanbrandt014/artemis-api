@@ -2,6 +2,16 @@
 import { getDb } from "./../utils/connection"
 import type { UserType } from "./../types/user"
 import { ObjectId } from "mongodb"
+import uuid from "uuid/v4"
+
+type UpdateVersionType = (user_id: string) => Promise<any>
+
+const updateVersion: UpdateVersionType = async (user_id) => {
+  const db = await getDb()
+  const User = db.collection("user")
+
+  User.update({ _id: ObjectId(user_id) }, { $set: { dataVersion: uuid() } })
+}
 
 type FetchType = (id: string) => Promise<UserType>
 const fetch: FetchType = async id => {
@@ -20,7 +30,7 @@ type UpdateSettingsType = ({
       value?: string
     }
   }
-}) => Promise<UserType>
+}) => Promise< UserType >
 
 const updateSettings = (user_id: string): UpdateSettingsType => async args => {
   const db = await getDb()
@@ -31,11 +41,13 @@ const updateSettings = (user_id: string): UpdateSettingsType => async args => {
   }
   await User.update({ _id: ObjectId(user_id) }, { $set: { ...fields } })
   const result = await fetch(user_id)
-  
+  updateVersion(user_id)  
+
   return result
 }
 
 export default {
   fetch,
-  updateSettings
+  updateSettings,
+  updateVersion
 }

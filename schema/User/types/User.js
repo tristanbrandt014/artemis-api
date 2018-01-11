@@ -8,6 +8,7 @@ export const User = gql`
     lastname: String
     email: String
     startup: Startup
+    dataVersion: String
   }
 `
 

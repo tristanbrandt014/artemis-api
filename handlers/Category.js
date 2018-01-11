@@ -2,6 +2,7 @@
 import { getDb } from "./../utils/connection"
 import type { CategoryType } from "./../types/category"
 import { ObjectId } from "mongodb"
+import User from "./User"
 
 type CreateType = ({
   name: string,
@@ -17,6 +18,7 @@ const create = (user_id: string): CreateType => async args => {
     ...args,
     user_id: ObjectId(user_id)
   })
+  User.updateVersion(user_id)
   return result.ops[0]
 }
 
@@ -58,6 +60,7 @@ const update = (user_id: string): UpdateType => async args => {
     { $set: { ...rest } }
   )
   const result = await fetch(user_id)({ id })
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -69,6 +72,7 @@ const destroy = (user_id: string): DestroyType => async args => {
 
   const result = await fetch(user_id)({ id: args.id })
   await Category.remove({ _id: ObjectId(args.id) })
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -91,6 +95,7 @@ export const addProject = (user_id: string): AddProjectType => async args => {
       }
     }
   )
+  User.updateVersion(user_id)  
   return result[0]
 }
 
@@ -114,8 +119,12 @@ export const removeProjects: RemoveProjectsType = async (
       $pull: {
         project_ids: ObjectId(project_id)
       }
+    },
+    {
+      multi: true
     }
   )
+  User.updateVersion(user_id)  
   return result[0]
 }
 

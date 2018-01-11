@@ -2,11 +2,11 @@
 import { getDb } from "./../utils/connection"
 import type { NoteType, TodoType } from "./../types/note"
 import { ObjectId } from "mongodb"
-import { Project } from "./"
+import { Project, User } from "./"
 
 type FetchType = ({
   ids: Array<string>
-}) => Promise<Array<NoteType>>
+}) => Promise < Array < NoteType >>
 
 const fetch = (user_id: string): FetchType => async args => {
   const db = await getDb()
@@ -27,7 +27,7 @@ type CreateType = ({
   body: string,
   project_id: string,
   todos?: Array<TodoType>
-}) => Promise<NoteType>
+}) => Promise < NoteType >
 
 const create = (user_id: string): CreateType => async args => {
   const db = await getDb()
@@ -45,6 +45,7 @@ const create = (user_id: string): CreateType => async args => {
     project_id: args.project_id
   })
 
+  User.updateVersion(user_id)
   return note
 }
 
@@ -66,6 +67,7 @@ const update = (user_id: string): UpdateType => async args => {
   )
   const result = await fetch(user_id)({ ids: [id] })
 
+  User.updateVersion(user_id)
   return result[0]
 }
 
@@ -81,6 +83,7 @@ const destroy = (user_id: string): DestroyType => async args => {
 
   const result = await fetch(user_id)({ ids: [args.id] })
   await Note.remove({ _id: ObjectId(args.id) })
+  User.updateVersion(user_id)
   return {
     ...result[0],
     project
@@ -97,6 +100,7 @@ const addToProject = (user_id: string): AddToProjectType => async args => {
     note_id: args.note_id,
     project_id: args.project_id
   })
+  User.updateVersion(user_id)
   return result
 }
 
@@ -107,6 +111,7 @@ type RemoveFromProjectType = (
 
 const removeFromProject: RemoveFromProjectType = async (user_id, note_id) => {
   const project = await Project.removeNote(user_id, note_id)
+  User.updateVersion(user_id)
   return project
 }
 

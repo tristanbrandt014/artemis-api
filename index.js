@@ -1,4 +1,5 @@
 // @flow
+import "babel-polyfill"
 import { connect } from "./utils/connection"
 import { graphqlExpress } from "apollo-server-express"
 import morgan from "morgan"

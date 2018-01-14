@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import config from "./../config"
 import { omit } from "lodash"
+import rp from "request-promise"
 
 export const SALT_WORK_FACTOR = 10
 export const Auth = Router()
@@ -16,7 +17,8 @@ Auth.post("/register", async (req: $Request, res: $Response) => {
       req.body.firstname &&
       req.body.lastname &&
       req.body.email &&
-      req.body.password
+      req.body.password &&
+      req.body.captcha
     )
   ) {
     res.sendStatus(400)
@@ -34,10 +36,31 @@ Auth.post("/register", async (req: $Request, res: $Response) => {
     return
   }
 
+  const { firstname, lastname, email, captcha } = req.body
+
+  const verifyUrl = "https://www.google.com/recaptcha/api/siteverify"
+
+  const requestOptions = {
+    method: 'POST',
+    uri: verifyUrl,
+    formData: {
+      secret: config.captchaSecret,
+      response: captcha,
+      remoteip: req.connection.remoteAddress
+    },
+    json: true
+};
+  const verifyCaptcha = rp(requestOptions)
+  const captchaResponse = await verifyCaptcha
+
+  if (captchaResponse.success) {
+    res.status(403).send("invalid captcha")
+    return
+  }
+
+
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
   const password = await bcrypt.hash(req.body.password, salt)
-
-  const { firstname, lastname, email } = req.body
 
   const insert = await User.insert({
     firstname,
